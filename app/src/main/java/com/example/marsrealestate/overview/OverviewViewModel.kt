@@ -36,12 +36,12 @@ class OverviewViewModel : ViewModel() {
     private val _status = MutableLiveData<String>()
 
     // The external immutable LiveData for the request status String
-    val response: LiveData<String>
+    val status: LiveData<String>
         get() = _status
 
-    private val _property = MutableLiveData<MarsProperty>()
-    val property: LiveData<MarsProperty>
-        get() = _property
+    private val _properties = MutableLiveData<List<MarsProperty>>()
+    val properties: LiveData<List<MarsProperty>>
+        get() = _properties
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -62,7 +62,7 @@ class OverviewViewModel : ViewModel() {
             try {
                 var listResult = getPropertiesDeferred.await()
                 if (listResult.size > 0) {
-                    _property.value = listResult[0]
+                    _properties.value = listResult
                 }
                 _status.value = "Success ${listResult.size} Mars properties retrieved."
             } catch (t: Throwable) {
